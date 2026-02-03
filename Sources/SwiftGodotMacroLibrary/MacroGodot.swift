@@ -490,9 +490,20 @@ func camelToSnake(_ s: String) -> String {
 ///
 public struct GodotMacro: MemberMacro {
     
-    public static func expansion(of node: AttributeSyntax,
-                                 providingMembersOf declaration: some DeclGroupSyntax,
-                                 in context: some MacroExpansionContext) throws -> [DeclSyntax] {
+    public static func expansion(
+        of node: AttributeSyntax,
+        providingMembersOf declaration: some DeclGroupSyntax,
+        conformingTo protocols: [TypeSyntax],
+        in context: some MacroExpansionContext
+    ) throws -> [DeclSyntax] {
+        try expansion(of: node, providingMembersOf: declaration, in: context)
+    }
+
+    public static func expansion(
+        of node: AttributeSyntax,
+        providingMembersOf declaration: some DeclGroupSyntax,
+        in context: some MacroExpansionContext
+    ) throws -> [DeclSyntax] {
         
         guard let classDecl = declaration.as(ClassDeclSyntax.self) else {
             let classError = Diagnostic(node: declaration.root, message: GodotMacroError.godotMacroNotOnClass)
@@ -645,4 +656,3 @@ private extension MacroExpansionDeclSyntax {
             .text
     }
 }
-

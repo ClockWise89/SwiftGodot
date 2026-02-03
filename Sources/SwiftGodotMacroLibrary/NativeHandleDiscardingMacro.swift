@@ -37,19 +37,30 @@ public struct NativeHandleDiscardingMacro: MemberMacro {
         }
     }
 
-    public static func expansion(of node: AttributeSyntax,
-                                 providingMembersOf declaration: some DeclGroupSyntax,
-                                 in context: some MacroExpansionContext) throws -> [DeclSyntax] {
-            guard declaration.as(ClassDeclSyntax.self) != nil else {
-                let classError = Diagnostic(node: declaration.root, message: ProviderDiagnostic.notAClass)
-                context.diagnose(classError)
-                return []
-            }
+    public static func expansion(
+        of node: AttributeSyntax,
+        providingMembersOf declaration: some DeclGroupSyntax,
+        conformingTo protocols: [TypeSyntax],
+        in context: some MacroExpansionContext
+    ) throws -> [DeclSyntax] {
+        try expansion(of: node, providingMembersOf: declaration, in: context)
+    }
 
-            let initSyntax = try InitializerDeclSyntax("required init(nativeHandle _: UnsafeRawPointer)") {
-                StmtSyntax("fatalError(\"init(nativeHandle:) has not been implemented\")")
-            }
+    public static func expansion(
+        of node: AttributeSyntax,
+        providingMembersOf declaration: some DeclGroupSyntax,
+        in context: some MacroExpansionContext
+    ) throws -> [DeclSyntax] {
+        guard declaration.as(ClassDeclSyntax.self) != nil else {
+            let classError = Diagnostic(node: declaration.root, message: ProviderDiagnostic.notAClass)
+            context.diagnose(classError)
+            return []
+        }
 
-            return [DeclSyntax(initSyntax)]
+        let initSyntax = try InitializerDeclSyntax("required init(nativeHandle _: UnsafeRawPointer)") {
+            StmtSyntax("fatalError(\"init(nativeHandle:) has not been implemented\")")
+        }
+
+        return [DeclSyntax(initSyntax)]
     }
 }
