@@ -280,7 +280,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0"),
         .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.3.0"),
-        .package(url: "https://github.com/swiftlang/swift-syntax", exact: "603.0.0-prerelease-2025-12-17"),
+        .package(url: "https://github.com/swiftlang/swift-syntax", exact: "602.0.0"),
     ],
     targets: targets
 )
